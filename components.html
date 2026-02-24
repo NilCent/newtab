@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>添加组件</title>
+    <style>
+      :root { --border: rgba(0,0,0,.08); --text:#1f2a37; --subtle:#6b7280; --primary:#3b82f6; --radius:12px; }
+      *{box-sizing:border-box}
+      body{margin:0;font-family:"Inter",system-ui,-apple-system,"PingFang SC","Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:#fff}
+      .wrap{display:flex;flex-direction:column;height:100vh}
+      .hd{padding:12px;border-bottom:1px solid var(--border);font-weight:700}
+      .list{padding:12px;display:grid;gap:10px;overflow:auto}
+      .item{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+      .meta{display:flex;flex-direction:column}
+      .sub{font-size:12px;color:var(--subtle)}
+      .btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:6px 10px;font-weight:600;cursor:pointer}
+      .btn[disabled]{opacity:.5;cursor:not-allowed}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hd">可添加的组件</div>
+      <div class="list">
+        <div class="item" data-kind="history">
+          <div class="meta"><div>历史记录（1x1）</div><div class="sub">查看最近访问</div></div>
+          <button class="btn" data-add>加入页面</button>
+        </div>
+        <div class="item" data-kind="quote">
+          <div class="meta"><div>名言警句（3x2）</div><div class="sub">随机展示名言</div></div>
+          <button class="btn" data-add>加入页面</button>
+        </div>
+        <div class="item" data-kind="translator">
+          <div class="meta"><div>翻译（3x2）</div><div class="sub">MyMemory 翻译</div></div>
+          <button class="btn" data-add>加入页面</button>
+        </div>
+        
+      </div>
+    </div>
+    <script src="./components.js"></script>
+  </body>
+</html>

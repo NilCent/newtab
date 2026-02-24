@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>历史记录</title>
+    <style>
+      /* 仅作用于 iframe 内部，简单独立样式（紧凑列表） */
+      :root {
+        --border: rgba(0,0,0,.08);
+        --text: #1f2a37;
+        --subtle: #6b7280;
+        --radius: 12px;
+        --primary: #3b82f6;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, "PingFang SC", "Segoe UI", Roboto, Arial, sans-serif;
+        color: var(--text);
+        background: transparent;
+      }
+      .wrap {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .header {
+        padding: 12px 12px 10px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255,255,255,.92);
+        backdrop-filter: blur(6px);
+      }
+      .header-title { font-weight: 700; }
+      .config-btn {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .header-actions { display: flex; align-items: center; gap: 8px; }
+      .search-bar {
+        padding: 10px;
+        border-bottom: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        background: rgba(255,255,255,.9);
+        backdrop-filter: blur(6px);
+      }
+      .search-input {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      .list {
+        padding: 6px 10px 10px;
+        overflow: auto;
+        display: block;
+      }
+      .item {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--border); /* 分隔线而非框包裹 */
+      }
+      .fav {
+        width: 14px;
+        height: 14px;
+        flex: 0 0 auto;
+        border-radius: 4px;
+        margin-right: 6px;
+      }
+      .title {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 400; /* 不加重 */
+        font-size: 13px;  /* 更小的字号 */
+        line-height: 1.45;
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .time {
+        font-size: 12px;
+        color: var(--subtle);
+        flex: 0 0 auto;
+        margin-left: 8px;
+        white-space: nowrap;
+      }
+      .empty {
+        color: var(--subtle);
+        text-align: center;
+        padding: 16px 0;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 顶部：搜索输入框（默认显示“最新历史”，输入关键字时显示过滤结果） -->
+    <div class="wrap">
+      <div class="header">
+        <div class="header-title">最近历史</div>
+        <div class="header-actions">
+          <button id="open-settings" class="config-btn" aria-label="历史记录配置">配置</button>
+          <button id="close-panel" class="config-btn" aria-label="关闭">关闭</button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input id="q" class="search-input" type="text" placeholder="搜索历史记录（标题/链接）" autocomplete="off" />
+      </div>
+      <div id="list" class="list" aria-live="polite"></div>
+    </div>
+    <script src="history.js"></script>
+  </body>
+ </html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>学习型 New Tab（静态原型）</title>
+    <!-- 设计说明：现代简约，参考苹果/Notion；配色以清新蓝为主 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- 页面容器：整体居中，最大宽度 500px -->
+    <main class="page">
+      <!-- 顶部：搜索栏组件（默认第一个，页面中上位置） -->
+      <section class="search-section">
+        <!-- 搜索引擎选择 -->
+        <label class="sr-only" for="engine">选择搜索引擎</label>
+        <select id="engine" class="engine-select" aria-label="选择搜索引擎">
+          <option value="google" selected>Google</option>
+          <option value="bing">Bing</option>
+          <option value="baidu">百度</option>
+        </select>
+        <!-- 搜索输入框 -->
+        <form id="search-form" class="search-form" role="search" aria-label="站点搜索">
+          <input id="search-input" class="search-input" type="text" placeholder="输入关键字开始搜索..." />
+          <button type="submit" class="search-btn">搜索</button>
+        </form>
+      </section>
+
+      <!-- 小组件网格：参考 iPhone 小组件 -->
+      <section class="widgets" aria-label="组件网格">
+        <!-- 历史记录组件（1x1） -->
+        <div class="widget widget-1x1" id="history-widget" data-kind="history" role="button" tabindex="0" aria-expanded="false" aria-controls="history-panel">
+          <div class="widget-inner">
+            <div class="widget-title">历史记录</div>
+            <div class="widget-sub">点击查看最近访问</div>
+          </div>
+        </div>
+
+        
+
+        <!-- 名言警句组件（3x2） -->
+        <div class="widget widget-3x2" id="quote-widget" data-kind="quote">
+          <div class="widget-inner">
+            <div class="quote-content">
+              <div class="quote-text" id="quote-text">千里之行，始于足下</div>
+              <div class="quote-author" id="quote-author"></div>
+            </div>
+            <button id="quote-next" class="quote-next" aria-label="下一句">›</button>
+          </div>
+        </div>
+
+        <!-- 翻译组件（3x2） -->
+        <div class="widget widget-3x2" id="translator-widget" data-kind="translator">
+          <div class="widget-inner translator">
+            <div class="translator-input">
+              <textarea id="tr-input" class="tr-input" placeholder="输入待翻译文本..."></textarea>
+            </div>
+            <div class="translator-controls">
+              <select id="tr-source" class="tr-select">
+                <option value="en" selected>English</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="es">Español</option>
+                <option value="ru">Русский</option>
+              </select>
+              <span class="tr-arrow">→</span>
+              <select id="tr-target" class="tr-select">
+                <option value="zh" selected>中文</option>
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="es">Español</option>
+                <option value="ru">Русский</option>
+              </select>
+              <button id="tr-run" class="tr-btn">翻译</button>
+              <button id="tr-key" class="tr-gear" title="设置 MyMemory 邮箱（可选）" aria-label="设置 MyMemory 邮箱（可选）">⚙</button>
+            </div>
+            <div id="tr-output" class="translator-output" aria-live="polite"></div>
+          </div>
+        </div>
+
+        
+
+        <!-- 占位组件由脚本随机生成 -->
+      </section>
+    </main>
+
+    <!-- 子页面容器（可被不同组件控制：右侧抽屉 / 居中弹层） -->
+    <div id="panel-overlay" class="panel-overlay" aria-hidden="true"></div>
+    <aside id="history-panel" class="side-panel" aria-hidden="true">
+      <div class="panel-header">
+        <div class="panel-title" id="panel-title"></div>
+      </div>
+      <div class="panel-body">
+        <!-- 通过 iframe 加载独立的历史记录页面 -->
+        <iframe id="history-frame" title="历史记录页面" src="about:blank"></iframe>
+      </div>
+    </aside>
+
+    <!-- 左下角编辑按钮（进入编辑模式） -->
+    <button id="edit-toggle" class="edit-fab" aria-label="编辑组件">⚙</button>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "学习型 New Tab（组件化）",
+  "version": "0.1.0",
+  "description": "一个组件化的新标签页，集成搜索、历史记录与学习任务等模块。",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "history"
+  ],
+  "host_permissions": [],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "学习型 New Tab"
+  }
+}
