@@ -2,7 +2,7 @@
 node_modules/
 
 # 构建输出目录
-dist/
+dist/*
 build/
 out/
 

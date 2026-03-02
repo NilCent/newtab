@@ -6,8 +6,14 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "permissions": [
-    "history"
+    "history",
+    "storage",
+    "favicon"
   ],
   "host_permissions": [],
   "optional_host_permissions": [

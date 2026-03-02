@@ -103,18 +103,30 @@ body {
 }
 .search-btn:active { transform: translateY(1px); }
 
-/* 小组件网格：响应式列数（电脑 4 列，手机 3 列） */
+/* React Grid Layout 容器（使用绝对定位的布局引擎，不使用 CSS Grid） */
 .widgets {
-  display: grid;
-  /* 自适应列数：容器变宽时自动容纳更多列 */
-  grid-template-columns: repeat(auto-fill, var(--grid-size));
-  grid-auto-rows: var(--grid-size);
-  gap: var(--gap);
-  justify-content: center; /* 居中网格 */
+  position: relative;
   max-width: calc(6 * var(--grid-size) + 5 * var(--gap));
   margin-left: auto;
   margin-right: auto;
 }
+/* 加号占位（编辑模式） */
+.widget.add-slot {
+  border: 3px dashed rgba(31,41,55,0.25);
+  background: transparent;
+  box-shadow: none;
+}
+.widget.add-slot .add-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(31,41,55,0.45);
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1;
+}
+.widget.add-slot:hover .add-inner { color: rgba(31,41,55,0.75); }
 
 /* 组件卡片：圆角、阴影、苹果风细节 */
 .widget {
@@ -154,6 +166,8 @@ body {
   display: none;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  z-index: 10;
+  pointer-events: auto;
 }
 body.edit-mode .widget .remove-btn {
   display: inline-flex;
@@ -167,6 +181,7 @@ body.edit-mode .widget .remove-btn {
 .widgets.drag-active {
   cursor: move;
 }
+.widgets.drag-active .widget.dragging .widget-inner { animation: none; }
 .widget.drop-before::before,
 .widget.drop-after::after {
   content: "";
@@ -229,7 +244,7 @@ body.edit-mode .widget .remove-btn {
   resize: none;
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 4px;
   font-size: 14px;
 }
 .translator-controls {
@@ -268,10 +283,10 @@ body.edit-mode .widget .remove-btn {
 }
 .translator-output {
   width: 100%;
-  height: calc(100% - 2px);
+  height: 100%;
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 4px;
   font-size: 14px;
   background: #fff;
   color: var(--text);
@@ -281,12 +296,13 @@ body.edit-mode .widget .remove-btn {
 /* 让输入与输出充分占用空间 */
 .widget-inner.translator {
   display: grid;
-  grid-template-rows: 1.3fr auto 1.7fr;
-  padding: 8px;
-  gap: 8px;
+  grid-template-rows: 2fr auto 2fr;
+  padding: 4px;
+  gap: 4px;
+  align-items: stretch;
 }
 .translator-input { height: 100%; }
-.tr-input { height: calc(100% - 2px); padding: 10px 12px; }
+.tr-input { height: 100%; padding: 10px 12px; }
 .widget:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 28px rgba(31, 41, 55, 0.12);
@@ -361,19 +377,23 @@ body.edit-mode .widget .remove-btn {
 .side-panel.no-header .panel-header { display: none; }
 /* 居中弹层模式 */
 .side-panel.center {
-  top: 10vh;
+  top: 8vh;
   left: 50%;
   right: auto;
   height: auto;
-  max-height: 80vh;
-  width: min(92vw, 720px);
+  max-height: 88vh;
+  width: min(96vw, 1000px);
   transform: translate(-50%, -10vh) scale(0.98);
   border-left: 0;
   border-radius: 16px;
   box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+  opacity: 0;
+  pointer-events: none;
 }
 .side-panel.center.open {
   transform: translate(-50%, 0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
 }
 /* 左侧弹层模式 */
 .side-panel.left {
@@ -458,4 +478,281 @@ body.edit-mode .widget .remove-btn {
     grid-template-columns: repeat(auto-fill, var(--grid-size));
     grid-auto-rows: var(--grid-size);
   }
+}
+
+/* 历史记录视图 */
+.history-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+}
+.history-header {
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+}
+.history-title {
+  font-weight: 700;
+}
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.config-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.config-btn:hover {
+  background: var(--primary-weak);
+}
+.history-search {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.history-search-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+.history-list {
+  flex: 1;
+  overflow: auto;
+  padding: 8px 10px;
+}
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.history-item-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+.history-item-title {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+}
+.history-item-title:hover {
+  color: var(--primary);
+}
+.history-item-time {
+  font-size: 12px;
+  color: var(--subtle);
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.history-empty {
+  color: var(--subtle);
+  text-align: center;
+  padding: 16px 0;
+  font-size: 13px;
+}
+
+/* 历史记录配置视图 */
+.history-settings-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+}
+.history-settings-header {
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(6px);
+}
+.history-settings-title {
+  font-weight: 700;
+}
+.history-settings-actions {
+  display: flex;
+  gap: 8px;
+}
+.history-settings-content {
+  padding: 12px;
+  display: grid;
+  gap: 12px;
+  overflow: auto;
+}
+.history-settings-row {
+  display: grid;
+  gap: 6px;
+}
+.history-settings-label {
+  font-size: 13px;
+  color: var(--subtle);
+}
+.history-settings-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  font-size: 13px;
+}
+.history-settings-switch input {
+  width: 36px;
+  height: 20px;
+}
+.history-settings-textarea {
+  width: 100%;
+  min-height: 220px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* 通用按钮样式 */
+.btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+}
+.btn.primary:hover {
+  opacity: 0.9;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 名言警句配置视图 */
+.quote-settings-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, #f7fbff 0%, #eef5ff 100%);
+}
+.quote-settings-header {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,.9);
+  backdrop-filter: blur(6px);
+}
+.quote-settings-title {
+  font-weight: 700;
+}
+.quote-settings-actions {
+  display: flex;
+  gap: 8px;
+}
+.quote-settings-main {
+  flex: 1;
+  display: block;
+  padding: 12px;
+  overflow: auto;
+}
+.quote-settings-section {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,.6);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+.quote-settings-sep {
+  border-top: 2px dashed var(--border);
+  margin: 12px 0;
+}
+.quote-settings-row {
+  display: grid;
+  gap: 8px;
+}
+.quote-settings-input {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  width: 100%;
+}
+.quote-settings-small {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.quote-settings-list {
+  display: grid;
+  gap: 8px;
+}
+.quote-settings-item {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  position: relative;
+}
+.quote-settings-item-text {
+  font-size: 13px;
+  font-weight: 600;
+}
+.quote-settings-item-author {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.quote-settings-item-del {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 0;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  display: none;
+  cursor: pointer;
+}
+.quote-settings-item.mark .quote-settings-item-del {
+  display: block;
+}
+.quote-settings-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
 }
