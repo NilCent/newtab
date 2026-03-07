@@ -97,6 +97,13 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
+  const DateTimePreview = ({ w = 1, h = 1 }) => (
+    <div style={{ width: 180, height: 180, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+      <div style={{ fontSize: 32, fontWeight: 600 }}>14:30</div>
+      <div style={{ fontSize: 14, color: '#6b7280' }}>2024/01/15</div>
+      <div style={{ fontSize: 12, color: '#9ca3af' }}>周一</div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -126,6 +133,10 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('weather', 2, 2)}>
             <div style={previewBox}><WeatherPreview w={2} h={2} /></div>
             <div style={labelBox}><div style={title}>天气 • 2×2</div><div style={desc}>显示最近7天天气预报</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('datetime', 1, 1)}>
+            <div style={previewBox}><DateTimePreview w={1} h={1} /></div>
+            <div style={labelBox}><div style={title}>日期时间 • 1×1</div><div style={desc}>显示当前时间、日期和星期</div></div>
           </div>
         </div>
       </div>

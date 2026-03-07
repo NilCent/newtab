@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar.jsx'
 import QuoteWidget from './components/QuoteWidget.jsx'
 import TranslatorWidget from './components/TranslatorWidget.jsx'
 import WeatherWidget from './components/WeatherWidget.jsx'
+import DateTimeWidget from './components/DateTimeWidget.jsx'
 import SidePanel from './components/SidePanel.jsx'
 import AddModal from './components/AddModal.jsx'
 
@@ -32,7 +33,7 @@ export default function App() {
         if (it && !it.kind) {
           const base = String(it.i || '')
           const k = base.split('-')[0]
-          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather') {
+          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime') {
             return { ...it, kind: k }
           }
         }
@@ -62,6 +63,7 @@ export default function App() {
     if (kind === 'quote') return <QuoteWidget onOpenSettings={() => { setPanelView('quote-settings'); setPanelOpen(true) }} />
     if (kind === 'translator') return <TranslatorWidget />
     if (kind === 'weather') return <WeatherWidget />
+    if (kind === 'datetime') return <DateTimeWidget />
     return <div className="widget-inner"></div>
   }
   useEffect(() => {
@@ -90,6 +92,9 @@ export default function App() {
           }
           if (k === 'weather') {
             return { w: 2, h: 2 }
+          }
+          if (k === 'datetime') {
+            return { w: 1, h: 1 }
           }
           return { w: ww, h: hh }
         }
