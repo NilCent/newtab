@@ -756,3 +756,63 @@ body.edit-mode .widget .remove-btn {
   gap: 10px;
   margin-top: 8px;
 }
+
+/* 天气组件独有样式 */
+.widget-inner.weather-widget {
+  padding: 8px;
+  font-size: 12px;
+  width: 100%;
+}
+.weather-widget .weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.weather-widget .weather-title {
+  font-weight: 600;
+  color: var(--text);
+}
+.weather-widget .weather-refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+}
+.weather-widget .weather-refresh-btn:disabled {
+  opacity: 0.5;
+}
+.weather-widget .weather-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+.weather-widget .weather-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border);
+}
+.weather-widget .weather-item:last-child {
+  border-bottom: none;
+}
+.weather-widget .weather-date {
+  width: 40px;
+  color: var(--subtle);
+}
+.weather-widget .weather-icon {
+  font-size: 14px;
+}
+.weather-widget .weather-temp {
+  color: var(--text);
+  font-size: 11px;
+}
+.weather-widget .weather-wind {
+  color: var(--subtle);
+  font-size: 10px;
+  width: 28px;
+  text-align: right;
+}

@@ -72,6 +72,31 @@ export default function AddModal({ open, onClose, onSelect }) {
       <div style={{ border: '1px solid #e5e7eb', borderRadius: 12 }} />
     </div>
   )
+  const WeatherPreview = ({ w = 2, h = 2 }) => (
+    <div style={{ width: 260, height: 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>天气预报</div>
+        <div style={{ fontSize: 14 }}>↻</div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, color: '#6b7280' }}>今天</span>
+          <span style={{ fontSize: 14 }}>☀️</span>
+          <span style={{ fontSize: 11 }}>25° / 15°</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, color: '#6b7280' }}>明天</span>
+          <span style={{ fontSize: 14 }}>⛅</span>
+          <span style={{ fontSize: 11 }}>23° / 14°</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, color: '#6b7280' }}>后天</span>
+          <span style={{ fontSize: 14 }}>🌧️</span>
+          <span style={{ fontSize: 11 }}>20° / 12°</span>
+        </div>
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -97,6 +122,10 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('quote', 2, 2)}>
             <div style={previewBox}><QuotePreview w={2} h={2} /></div>
             <div style={labelBox}><div style={title}>摘抄 • 2×2</div><div style={desc}>紧凑显式摘抄内容与作者</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('weather', 2, 2)}>
+            <div style={previewBox}><WeatherPreview w={2} h={2} /></div>
+            <div style={labelBox}><div style={title}>天气 • 2×2</div><div style={desc}>显示最近7天天气预报</div></div>
           </div>
         </div>
       </div>

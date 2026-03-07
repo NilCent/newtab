@@ -5,6 +5,7 @@ import 'react-resizable/css/styles.css'
 import SearchBar from './components/SearchBar.jsx'
 import QuoteWidget from './components/QuoteWidget.jsx'
 import TranslatorWidget from './components/TranslatorWidget.jsx'
+import WeatherWidget from './components/WeatherWidget.jsx'
 import SidePanel from './components/SidePanel.jsx'
 import AddModal from './components/AddModal.jsx'
 
@@ -31,7 +32,7 @@ export default function App() {
         if (it && !it.kind) {
           const base = String(it.i || '')
           const k = base.split('-')[0]
-          if (k === 'quote' || k === 'translator' || k === 'history') {
+          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather') {
             return { ...it, kind: k }
           }
         }
@@ -60,6 +61,7 @@ export default function App() {
     )
     if (kind === 'quote') return <QuoteWidget onOpenSettings={() => { setPanelView('quote-settings'); setPanelOpen(true) }} />
     if (kind === 'translator') return <TranslatorWidget />
+    if (kind === 'weather') return <WeatherWidget />
     return <div className="widget-inner"></div>
   }
   useEffect(() => {
@@ -85,6 +87,9 @@ export default function App() {
           if (k === 'quote') {
             const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
             return ok ? { w: ww, h: hh } : { w: 3, h: 2 }
+          }
+          if (k === 'weather') {
+            return { w: 2, h: 2 }
           }
           return { w: ww, h: hh }
         }
