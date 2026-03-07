@@ -840,3 +840,94 @@ body.edit-mode .widget .remove-btn {
   font-size: 11px;
   color: var(--subtle);
 }
+
+/* Hacker News 组件样式 */
+.hacker-news-widget {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+}
+.hacker-news-widget .hn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.hacker-news-widget .hn-title {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13px;
+}
+.hacker-news-widget .hn-refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+}
+.hacker-news-widget .hn-refresh-btn:disabled {
+  opacity: 0.5;
+}
+.hacker-news-widget .hn-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hacker-news-widget .hn-list::-webkit-scrollbar {
+  display: none;
+}
+.hacker-news-widget .hn-loading {
+  text-align: center;
+  color: var(--subtle);
+  padding: 20px;
+}
+.hacker-news-widget .hn-item {
+  display: flex;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.hacker-news-widget .hn-item:last-child {
+  border-bottom: none;
+}
+.hacker-news-widget .hn-rank {
+  width: 20px;
+  font-size: 10px;
+  color: var(--subtle);
+  flex-shrink: 0;
+}
+.hacker-news-widget .hn-content {
+  flex: 1;
+  min-width: 0;
+}
+.hacker-news-widget .hn-title {
+  font-size: 11px;
+  color: var(--text);
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.3;
+}
+.hacker-news-widget .hn-title:hover {
+  text-decoration: underline;
+}
+.hacker-news-widget .hn-meta {
+  font-size: 9px;
+  color: var(--subtle);
+  margin-top: 2px;
+}
+.hacker-news-widget .hn-points {
+  margin-right: 8px;
+}
+.hacker-news-widget .hn-comments-link {
+  color: var(--subtle);
+  text-decoration: none;
+}
+.hacker-news-widget .hn-comments-link:hover {
+  text-decoration: underline;
+}

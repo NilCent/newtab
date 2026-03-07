@@ -104,6 +104,37 @@ export default function AddModal({ open, onClose, onSelect }) {
       <div style={{ fontSize: 12, color: '#9ca3af' }}>周一</div>
     </div>
   )
+  const HackerNewsPreview = ({ w = 2, h = 2 }) => (
+    <div style={{ width: 260, height: 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>Hacker News</div>
+        <div style={{ fontSize: 14 }}>↻</div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <span style={{ fontSize: 10, color: '#6b7280', width: 16 }}>1.</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Show HN: I built a new framework</div>
+            <div style={{ fontSize: 9, color: '#9ca3af' }}>256 points · 89 comments</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <span style={{ fontSize: 10, color: '#6b7280', width: 16 }}>2.</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>The future of AI in 2024</div>
+            <div style={{ fontSize: 9, color: '#9ca3af' }}>198 points · 67 comments</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <span style={{ fontSize: 10, color: '#6b7280', width: 16 }}>3.</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Why Rust is gaining popularity</div>
+            <div style={{ fontSize: 9, color: '#9ca3af' }}>145 points · 52 comments</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -137,6 +168,14 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('datetime', 1, 1)}>
             <div style={previewBox}><DateTimePreview w={1} h={1} /></div>
             <div style={labelBox}><div style={title}>日期时间 • 1×1</div><div style={desc}>显示当前时间、日期和星期</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('hackernews', 2, 2)}>
+            <div style={previewBox}><HackerNewsPreview w={2} h={2} /></div>
+            <div style={labelBox}><div style={title}>Hacker News • 2×2</div><div style={desc}>显示当天热门技术文章</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('hackernews', 3, 2)}>
+            <div style={previewBox}><HackerNewsPreview w={3} h={2} /></div>
+            <div style={labelBox}><div style={title}>Hacker News • 3×2</div><div style={desc}>更宽的显示区域</div></div>
           </div>
         </div>
       </div>

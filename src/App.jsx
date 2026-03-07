@@ -7,6 +7,7 @@ import QuoteWidget from './components/QuoteWidget.jsx'
 import TranslatorWidget from './components/TranslatorWidget.jsx'
 import WeatherWidget from './components/WeatherWidget.jsx'
 import DateTimeWidget from './components/DateTimeWidget.jsx'
+import HackerNewsWidget from './components/HackerNewsWidget.jsx'
 import SidePanel from './components/SidePanel.jsx'
 import AddModal from './components/AddModal.jsx'
 
@@ -33,7 +34,7 @@ export default function App() {
         if (it && !it.kind) {
           const base = String(it.i || '')
           const k = base.split('-')[0]
-          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime') {
+          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime' || k === 'hackernews') {
             return { ...it, kind: k }
           }
         }
@@ -64,6 +65,7 @@ export default function App() {
     if (kind === 'translator') return <TranslatorWidget />
     if (kind === 'weather') return <WeatherWidget />
     if (kind === 'datetime') return <DateTimeWidget />
+    if (kind === 'hackernews') return <HackerNewsWidget />
     return <div className="widget-inner"></div>
   }
   useEffect(() => {
@@ -95,6 +97,10 @@ export default function App() {
           }
           if (k === 'datetime') {
             return { w: 1, h: 1 }
+          }
+          if (k === 'hackernews') {
+            const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
+            return ok ? { w: ww, h: hh } : { w: 2, h: 2 }
           }
           return { w: ww, h: hh }
         }
