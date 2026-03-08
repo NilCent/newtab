@@ -8,6 +8,7 @@ import TranslatorWidget from './components/TranslatorWidget.jsx'
 import WeatherWidget from './components/WeatherWidget.jsx'
 import DateTimeWidget from './components/DateTimeWidget.jsx'
 import HackerNewsWidget from './components/HackerNewsWidget.jsx'
+import TodoWidget from './components/TodoWidget.jsx'
 import SidePanel from './components/SidePanel.jsx'
 import AddModal from './components/AddModal.jsx'
 
@@ -25,6 +26,7 @@ export default function App() {
   const [editMode, setEditMode] = useState(false)
   const [addPos, setAddPos] = useState({ x: 0, y: 0 })
   const [addOpen, setAddOpen] = useState(false)
+  const [penaltyActive, setPenaltyActive] = useState(false)
   const [layout, setLayout] = useState(() => {
     try {
       const raw = localStorage.getItem('rglLayout')
@@ -34,7 +36,7 @@ export default function App() {
         if (it && !it.kind) {
           const base = String(it.i || '')
           const k = base.split('-')[0]
-          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime' || k === 'hackernews') {
+          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime' || k === 'hackernews' || k === 'todo') {
             return { ...it, kind: k }
           }
         }
@@ -56,9 +58,9 @@ export default function App() {
   }, [layout, editMode])
   const renderItem = kind => {
     if (kind === 'history') return (
-      <div className="widget-inner">
+      <div className={`widget-inner ${penaltyActive ? 'penalty-disabled' : ''}`}>
         <div className="widget-title">历史记录</div>
-        <div className="widget-sub">点击查看最近访问</div>
+        <div className="widget-sub">{penaltyActive ? '有任务逾期，请先完成任务' : '点击查看最近访问'}</div>
       </div>
     )
     if (kind === 'quote') return <QuoteWidget onOpenSettings={() => { setPanelView('quote-settings'); setPanelOpen(true) }} />
@@ -66,6 +68,7 @@ export default function App() {
     if (kind === 'weather') return <WeatherWidget />
     if (kind === 'datetime') return <DateTimeWidget />
     if (kind === 'hackernews') return <HackerNewsWidget />
+    if (kind === 'todo') return <TodoWidget onPenaltyChange={setPenaltyActive} />
     return <div className="widget-inner"></div>
   }
   useEffect(() => {
@@ -102,6 +105,9 @@ export default function App() {
             const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
             return ok ? { w: ww, h: hh } : { w: 2, h: 2 }
           }
+          if (k === 'todo') {
+            return { w: 2, h: 2 }
+          }
           return { w: ww, h: hh }
         }
         const size = clamp(kind, w, h)
@@ -132,7 +138,7 @@ export default function App() {
   }, [editMode])
   return (
     <main className="page" style={{ maxWidth: 1000, margin: '6vh auto', padding: '120px 16px 32px' }}>
-      <SearchBar />
+      <SearchBar disabled={penaltyActive} />
       <ReactGridLayout
         className={`widgets ${editMode ? 'drag-active' : ''}`}
         cols={6}
@@ -173,7 +179,7 @@ export default function App() {
               onClick={
                 it.i === '__add__'
                   ? () => { setAddPos({ x: it.x, y: it.y }); setAddOpen(true) }
-                  : (!editMode && isHistory ? () => { setPanelView('history'); setPanelMode('right'); setPanelOpen(true) } : undefined)
+                  : (!editMode && isHistory && !penaltyActive ? () => { setPanelView('history'); setPanelMode('right'); setPanelOpen(true) } : undefined)
               }
               role={isHistory ? 'button' : undefined}
               tabIndex={isHistory ? 0 : undefined}

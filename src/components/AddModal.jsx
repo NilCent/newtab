@@ -135,6 +135,29 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
+  const TodoPreview = ({ w = 2, h = 2 }) => (
+    <div style={{ width: 260, height: 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>待办事项</div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ fontSize: 10, color: '#6b7280', marginBottom: 2 }}>今天</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 14, height: 14, border: '1.5px solid #e5e7eb', borderRadius: 4 }}></div>
+          <span style={{ fontSize: 11 }}>完成项目报告</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 14, height: 14, border: '1.5px solid #e5e7eb', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8 }}>2/5</div>
+          <span style={{ fontSize: 11 }}>写 5 道算法题</span>
+        </div>
+        <div style={{ fontSize: 10, color: '#6b7280', marginBottom: 2, marginTop: 4 }}>本周</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 14, height: 14, border: '1.5px solid #e5e7eb', borderRadius: 4 }}></div>
+          <span style={{ fontSize: 11 }}>整理文档</span>
+        </div>
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -176,6 +199,10 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('hackernews', 3, 2)}>
             <div style={previewBox}><HackerNewsPreview w={3} h={2} /></div>
             <div style={labelBox}><div style={title}>Hacker News • 3×2</div><div style={desc}>更宽的显示区域</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('todo', 2, 2)}>
+            <div style={previewBox}><TodoPreview w={2} h={2} /></div>
+            <div style={labelBox}><div style={title}>待办事项 • 2×2</div><div style={desc}>管理待完成的任务</div></div>
           </div>
         </div>
       </div>
