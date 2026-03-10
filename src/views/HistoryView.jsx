@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { sendMessage } from '../messaging'
 
 const STORAGE_KEY = 'historySettings'
@@ -16,6 +16,13 @@ export default function HistoryView({ onOpenSettings }) {
   const [loading, setLoading] = useState(false)
   const [blacklistEnabled, setBlacklistEnabled] = useState(false)
   const [blacklistRules, setBlacklistRules] = useState([])
+  const searchInputRef = useRef(null)
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [])
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -129,6 +136,7 @@ export default function HistoryView({ onOpenSettings }) {
       </div>
       <div className="history-search">
         <input
+          ref={searchInputRef}
           className="history-search-input"
           type="text"
           placeholder="搜索历史记录（标题/链接）"

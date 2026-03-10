@@ -130,21 +130,29 @@ body {
 }
 /* 加号占位（编辑模式） */
 .widget.add-slot {
-  border: 3px dashed rgba(31,41,55,0.25);
-  background: transparent;
+  border: 2px dashed var(--primary);
+  background: var(--primary-weak);
   box-shadow: none;
+  transition: all 0.2s ease;
+}
+.widget.add-slot:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--primary);
 }
 .widget.add-slot .add-inner {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(31,41,55,0.45);
-  font-weight: 900;
-  font-size: 36px;
+  color: var(--primary);
+  font-weight: 300;
+  font-size: 48px;
   line-height: 1;
+  transition: transform 0.2s ease;
 }
-.widget.add-slot:hover .add-inner { color: rgba(31,41,55,0.75); }
+.widget.add-slot:hover .add-inner {
+  transform: scale(1.1);
+}
 
 /* 组件卡片：圆角、阴影、苹果风细节 */
 .widget {

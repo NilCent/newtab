@@ -48,12 +48,25 @@ export default function App() {
     const base = layout.filter(it => it.i !== '__add__').map(it => ({ ...it, static: !editMode }))
     if (!editMode) return base
     const cols = 6
-    const byRow = [...base].sort((a,b) => (a.y === b.y ? a.x - b.x : a.y - b.y))
-    const last = byRow[byRow.length - 1]
-    let nx = (last?.x ?? 0) + (last?.w ?? 1)
-    let ny = last?.y ?? 0
-    if (nx >= cols) { nx = 0; ny = ny + (last?.h ?? 1) }
-    const addSlot = { i: '__add__', x: nx, y: ny, w: 1, h: 1, static: true }
+    const colHeights = new Array(cols).fill(0)
+    base.forEach(it => {
+      const endX = Math.min(it.x + it.w, cols)
+      const bottomY = it.y + it.h
+      for (let x = it.x; x < endX; x++) {
+        if (x >= 0 && x < cols) {
+          colHeights[x] = Math.max(colHeights[x], bottomY)
+        }
+      }
+    })
+    let minHeight = colHeights[0]
+    let minCol = 0
+    for (let i = 1; i < cols; i++) {
+      if (colHeights[i] < minHeight) {
+        minHeight = colHeights[i]
+        minCol = i
+      }
+    }
+    const addSlot = { i: '__add__', x: minCol, y: minHeight, w: 1, h: 1, static: true }
     return [...base, addSlot]
   }, [layout, editMode])
   const renderItem = kind => {
