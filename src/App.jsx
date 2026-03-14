@@ -9,6 +9,7 @@ import WeatherWidget from './components/WeatherWidget.jsx'
 import DateTimeWidget from './components/DateTimeWidget.jsx'
 import HackerNewsWidget from './components/HackerNewsWidget.jsx'
 import TodoWidget from './components/TodoWidget.jsx'
+import FlashcardWidget from './components/FlashcardWidget.jsx'
 import SidePanel from './components/SidePanel.jsx'
 import AddModal from './components/AddModal.jsx'
 
@@ -27,6 +28,7 @@ export default function App() {
   const [addPos, setAddPos] = useState({ x: 0, y: 0 })
   const [addOpen, setAddOpen] = useState(false)
   const [penaltyActive, setPenaltyActive] = useState(false)
+  const [currentFlashcardId, setCurrentFlashcardId] = useState(null)
   const [layout, setLayout] = useState(() => {
     try {
       const raw = localStorage.getItem('rglLayout')
@@ -69,7 +71,7 @@ export default function App() {
     const addSlot = { i: '__add__', x: minCol, y: minHeight, w: 1, h: 1, static: true }
     return [...base, addSlot]
   }, [layout, editMode])
-  const renderItem = kind => {
+  const renderItem = (kind, w = 1, h = 1, widgetId = null) => {
     if (kind === 'history') return (
       <div className={`widget-inner ${penaltyActive ? 'penalty-disabled' : ''}`}>
         <div className="widget-title">历史记录</div>
@@ -82,6 +84,7 @@ export default function App() {
     if (kind === 'datetime') return <DateTimeWidget />
     if (kind === 'hackernews') return <HackerNewsWidget />
     if (kind === 'todo') return <TodoWidget onPenaltyChange={setPenaltyActive} />
+    if (kind === 'flashcard') return <FlashcardWidget size={`${w}x${h}`} widgetId={widgetId} onOpenSettings={() => { setPanelView('flashcard-settings'); setPanelMode('right'); setPanelOpen(true); setCurrentFlashcardId(widgetId) }} />
     return <div className="widget-inner"></div>
   }
   useEffect(() => {
@@ -120,6 +123,10 @@ export default function App() {
           }
           if (k === 'todo') {
             return { w: 2, h: 2 }
+          }
+          if (k === 'flashcard') {
+            const ok = (ww === 1 && hh === 1) || (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
+            return ok ? { w: ww, h: hh } : { w: 1, h: 1 }
           }
           return { w: ww, h: hh }
         }
@@ -209,7 +216,7 @@ export default function App() {
                         return next
                       })
                     }}>−</button>}
-                    {renderItem(kind)}
+                    {renderItem(kind, it.w, it.h, it.i)}
                   </>}
             </div>
           )
@@ -239,6 +246,7 @@ export default function App() {
         onClose={() => setPanelOpen(false)}
         onOpenSettings={() => { setPanelView('history-settings'); setPanelOpen(true) }}
         onBackToHistory={() => { setPanelView('history'); setPanelOpen(true) }}
+        widgetId={currentFlashcardId}
       />
       <AddModal
         open={addOpen}

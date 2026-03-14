@@ -158,6 +158,24 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
+  const FlashcardPreview = ({ w = 1, h = 1 }) => (
+    <div style={{ width: w === 1 ? 180 : 260, height: h === 1 ? 180 : 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <span style={{ fontSize: 9, padding: '2px 4px', background: '#e0efff', color: '#3b82f6', borderRadius: 3 }}>英语</span>
+        </div>
+        <div style={{ fontSize: 10, color: '#6b7280' }}>1/10</div>
+      </div>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 8 }}>
+        <div style={{ fontSize: 14, fontWeight: 500 }}>immune</div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ width: 24, height: 24, border: '1px solid #e5e7eb', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>‹</div>
+        <div style={{ fontSize: 10, color: '#9ca3af' }}>点击翻转</div>
+        <div style={{ width: 24, height: 24, border: '1px solid #e5e7eb', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>›</div>
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -203,6 +221,18 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('todo', 2, 2)}>
             <div style={previewBox}><TodoPreview w={2} h={2} /></div>
             <div style={labelBox}><div style={title}>待办事项 • 2×2</div><div style={desc}>管理待完成的任务</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('flashcard', 1, 1)}>
+            <div style={previewBox}><FlashcardPreview w={1} h={1} /></div>
+            <div style={labelBox}><div style={title}>闪卡 • 1×1</div><div style={desc}>学习卡片，点击翻转查看答案</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('flashcard', 2, 2)}>
+            <div style={previewBox}><FlashcardPreview w={2} h={2} /></div>
+            <div style={labelBox}><div style={title}>闪卡 • 2×2</div><div style={desc}>更大的显示区域</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('flashcard', 3, 2)}>
+            <div style={previewBox}><FlashcardPreview w={3} h={2} /></div>
+            <div style={labelBox}><div style={title}>闪卡 • 3×2</div><div style={desc}>最宽的显示区域</div></div>
           </div>
         </div>
       </div>
