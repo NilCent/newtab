@@ -52,13 +52,6 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
-  const QuotePreview = ({ w = 3, h = 2 }) => (
-    <div style={{ width: 260, height: h === 2 ? 220 : 180, display: 'grid', gap: 8, alignItems: 'center', justifyItems: 'center', textAlign: 'center' }}>
-      <div style={{ fontSize: 16, fontWeight: 600 }}>千里之行，始于足下</div>
-      <div style={{ fontSize: 12, color: '#6b7280' }}>老子</div>
-      <div style={{ width: 28, height: 28, borderRadius: 14, border: '1px solid #e5e7eb' }} />
-    </div>
-  )
   const TranslatorPreview = ({ w = 3, h = 2 }) => (
     <div style={{ width: 260, height: 220, display: 'grid', gridTemplateRows: '1fr auto 1fr', gap: 10 }}>
       <div style={{ border: '1px solid #e5e7eb', borderRadius: 12 }} />
@@ -193,14 +186,6 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('translator', 2, 2)}>
             <div style={previewBox}><TranslatorPreview w={2} h={2} /></div>
             <div style={labelBox}><div style={title}>翻译 • 2×2</div><div style={desc}>紧凑版翻译面板</div></div>
-          </div>
-          <div style={itemWrap} onClick={() => onSelect?.('quote', 3, 2)}>
-            <div style={previewBox}><QuotePreview w={3} h={2} /></div>
-            <div style={labelBox}><div style={title}>摘抄 • 3×2</div><div style={desc}>随机展示摘抄，右下角切换下一条</div></div>
-          </div>
-          <div style={itemWrap} onClick={() => onSelect?.('quote', 2, 2)}>
-            <div style={previewBox}><QuotePreview w={2} h={2} /></div>
-            <div style={labelBox}><div style={title}>摘抄 • 2×2</div><div style={desc}>紧凑显式摘抄内容与作者</div></div>
           </div>
           <div style={itemWrap} onClick={() => onSelect?.('weather', 2, 2)}>
             <div style={previewBox}><WeatherPreview w={2} h={2} /></div>

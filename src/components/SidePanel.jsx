@@ -1,13 +1,11 @@
 import React from 'react'
 import HistoryView from '../views/HistoryView'
 import HistorySettingsView from '../views/HistorySettingsView'
-import QuoteSettingsView from '../views/QuoteSettingsView'
 import FlashcardSettingsView from '../views/FlashcardSettingsView'
 
 const VIEW_COMPONENTS = {
   'history': HistoryView,
   'history-settings': HistorySettingsView,
-  'quote-settings': QuoteSettingsView,
   'flashcard-settings': FlashcardSettingsView,
 }
 

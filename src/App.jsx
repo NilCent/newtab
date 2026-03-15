@@ -3,7 +3,6 @@ import GridLayout, { WidthProvider } from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import SearchBar from './components/SearchBar.jsx'
-import QuoteWidget from './components/QuoteWidget.jsx'
 import TranslatorWidget from './components/TranslatorWidget.jsx'
 import WeatherWidget from './components/WeatherWidget.jsx'
 import DateTimeWidget from './components/DateTimeWidget.jsx'
@@ -15,8 +14,7 @@ import AddModal from './components/AddModal.jsx'
 
 const ReactGridLayout = WidthProvider(GridLayout)
 const baseLayout = [
-  { i: 'quote-1', kind: 'quote', x: 0, y: 0, w: 3, h: 2, static: true },
-  { i: 'translator-1', kind: 'translator', x: 3, y: 0, w: 3, h: 2, static: true },
+  { i: 'translator-1', kind: 'translator', x: 0, y: 0, w: 3, h: 2, static: true },
   { i: 'history-1', kind: 'history', x: 0, y: 2, w: 1, h: 1, static: true }
 ]
 
@@ -38,7 +36,7 @@ export default function App() {
         if (it && !it.kind) {
           const base = String(it.i || '')
           const k = base.split('-')[0]
-          if (k === 'quote' || k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime' || k === 'hackernews' || k === 'todo') {
+          if (k === 'translator' || k === 'history' || k === 'weather' || k === 'datetime' || k === 'hackernews' || k === 'todo' || k === 'flashcard') {
             return { ...it, kind: k }
           }
         }
@@ -78,7 +76,6 @@ export default function App() {
         <div className="widget-sub">{penaltyActive ? '有任务逾期，请先完成任务' : '点击查看最近访问'}</div>
       </div>
     )
-    if (kind === 'quote') return <QuoteWidget onOpenSettings={() => { setPanelView('quote-settings'); setPanelOpen(true) }} />
     if (kind === 'translator') return <TranslatorWidget />
     if (kind === 'weather') return <WeatherWidget />
     if (kind === 'datetime') return <DateTimeWidget />
@@ -104,10 +101,6 @@ export default function App() {
         const clamp = (k, ww, hh) => {
           if (k === 'history') return { w: 1, h: 1 }
           if (k === 'translator') {
-            const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
-            return ok ? { w: ww, h: hh } : { w: 3, h: 2 }
-          }
-          if (k === 'quote') {
             const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
             return ok ? { w: ww, h: hh } : { w: 3, h: 2 }
           }
@@ -255,10 +248,6 @@ export default function App() {
           const clamp = (k, ww, hh) => {
             if (k === 'history') return { w: 1, h: 1 }
             if (k === 'translator') {
-              const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
-              return ok ? { w: ww, h: hh } : { w: 3, h: 2 }
-            }
-            if (k === 'quote') {
               const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
               return ok ? { w: ww, h: hh } : { w: 3, h: 2 }
             }

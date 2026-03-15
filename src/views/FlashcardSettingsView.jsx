@@ -285,7 +285,7 @@ export default function FlashcardSettingsView({ onClose, widgetId }) {
           <div className="flashcard-settings-help">
             <p><code>正面 {'>>>'} 反面</code> — 单行双面卡片</p>
             <p><code>::: 反面内容 :::</code> — 多行双面卡片</p>
-            <p><code>***</code> — 分割多个单面卡片</p>
+            <p><code>---</code> — 分割多个单面卡片</p>
             <p><code># 标题</code> — 作为卡片标签</p>
           </div>
         </div>

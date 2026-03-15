@@ -135,8 +135,8 @@ function parseFlashcards(markdown, filePath = '') {
       const prevLine = i > 0 ? lines[i - 1].trim() : ''
       const nextLine = i < lines.length - 1 ? lines[i + 1].trim() : ''
       
-      const prevIsSeparator = prevLine === '' || isHeading(prevLine) || isSingleLineDoubleSided(prevLine) || prevLine === '***'
-      const nextIsSeparator = nextLine === '' || isHeading(nextLine) || isSingleLineDoubleSided(nextLine) || nextLine === '***'
+      const prevIsSeparator = prevLine === '' || isHeading(prevLine) || isSingleLineDoubleSided(prevLine) || prevLine === '---'
+      const nextIsSeparator = nextLine === '' || isHeading(nextLine) || isSingleLineDoubleSided(nextLine) || nextLine === '---'
       const isStandalone = prevIsSeparator && nextIsSeparator
       
       if (isStandalone) {
@@ -213,7 +213,7 @@ function updateTags(tags, newLevel, newText) {
 }
 
 function isDivider(line) {
-  return line === '***'
+  return line === '---'
 }
 
 function isEmptyLine(line) {
