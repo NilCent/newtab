@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import TodoEditCard from './TodoEditCard.jsx'
+import { getSyncData, setSyncData, onSyncChange } from '../utils/syncStorage'
 
 const STORAGE_KEY = 'todoData'
 
@@ -15,15 +16,24 @@ export default function TodoWidget({ onPenaltyChange }) {
   const [editCard, setEditCard] = useState({ open: false, todo: null, section: null })
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
-      setTodos(JSON.parse(saved))
-    }
+    getSyncData(STORAGE_KEY).then(saved => {
+      if (saved) {
+        setTodos(saved)
+      }
+    })
+    
+    const unsubscribe = onSyncChange(STORAGE_KEY, (newData) => {
+      if (newData) {
+        setTodos(newData)
+      }
+    })
+    
+    return unsubscribe
   }, [])
 
-  const saveTodos = useCallback((newTodos) => {
+  const saveTodos = useCallback(async (newTodos) => {
     setTodos(newTodos)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newTodos))
+    await setSyncData(STORAGE_KEY, newTodos)
   }, [])
 
   const isToday = (dateStr) => {
