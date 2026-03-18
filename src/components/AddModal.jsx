@@ -169,6 +169,19 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
+  const NotePreview = ({ w = 2, h = 2 }) => (
+    <div style={{ width: 260, height: 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ fontSize: 14, fontWeight: 600 }}>便签</div>
+      <div style={{ flex: 1, border: '1px solid #e5e7eb', borderRadius: 8, padding: 8, background: '#fafafa' }}>
+        <div style={{ fontSize: 11, color: '#6b7280', lineHeight: 1.6 }}>
+          今天要完成的事情：<br/>
+          1. 完成项目报告<br/>
+          2. 复习英语单词<br/>
+          3. ...
+        </div>
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -218,6 +231,14 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('flashcard', 3, 2)}>
             <div style={previewBox}><FlashcardPreview w={3} h={2} /></div>
             <div style={labelBox}><div style={title}>闪卡 • 3×2</div><div style={desc}>最宽的显示区域</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('note', 2, 2)}>
+            <div style={previewBox}><NotePreview w={2} h={2} /></div>
+            <div style={labelBox}><div style={title}>便签 • 2×2</div><div style={desc}>快速记录文本，自动同步</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('note', 3, 2)}>
+            <div style={previewBox}><NotePreview w={3} h={2} /></div>
+            <div style={labelBox}><div style={title}>便签 • 3×2</div><div style={desc}>更大的记录空间</div></div>
           </div>
         </div>
       </div>
