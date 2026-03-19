@@ -1,27 +1,75 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { getSyncData, setSyncData, onSyncChange } from '../utils/syncStorage'
 
-export default function NoteWidget({ widgetId }) {
+const getLocalData = (key) => {
+  try {
+    const data = localStorage.getItem(key)
+    return data ? JSON.parse(data) : null
+  } catch {
+    return null
+  }
+}
+
+const setLocalData = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch {}
+}
+
+const WIDGET_NOTE_MAP_KEY = 'widget-note-map'
+
+export function notifyWidgetNoteMapChanged() {
+  window.dispatchEvent(new CustomEvent('widgetNoteMapChanged'))
+}
+
+export default function NoteWidget({ widgetId, onOpenSettings }) {
   const [content, setContent] = useState('')
   const [isEditing, setIsEditing] = useState(false)
+  const [noteId, setNoteId] = useState(null)
   const textareaRef = useRef(null)
 
-  useEffect(() => {
-    const key = `note-${widgetId}`
-    getSyncData(key).then(saved => {
-      if (saved) setContent(saved)
-    })
+  const loadNote = useCallback(async () => {
+    const widgetNoteMap = getLocalData(WIDGET_NOTE_MAP_KEY) || {}
+    const currentNoteId = widgetNoteMap[widgetId]
+    setNoteId(currentNoteId)
     
-    const unsubscribe = onSyncChange(key, (newData) => {
-      if (newData !== null) setContent(newData)
-    })
-    
-    return unsubscribe
+    if (currentNoteId) {
+      const noteContent = await getSyncData(currentNoteId) || ''
+      setContent(noteContent)
+    } else {
+      setContent('')
+    }
   }, [widgetId])
 
+  useEffect(() => {
+    loadNote()
+    
+    const unsub = onSyncChange('notes-list', loadNote)
+    
+    const handleWidgetNoteMapChange = () => {
+      loadNote()
+    }
+    window.addEventListener('widgetNoteMapChanged', handleWidgetNoteMapChange)
+    
+    return () => {
+      unsub()
+      window.removeEventListener('widgetNoteMapChanged', handleWidgetNoteMapChange)
+    }
+  }, [loadNote])
+
+  useEffect(() => {
+    if (noteId) {
+      const unsub = onSyncChange(noteId, (newContent) => {
+        if (newContent !== null) setContent(newContent)
+      })
+      return unsub
+    }
+  }, [noteId])
+
   const handleSave = async () => {
-    const key = `note-${widgetId}`
-    await setSyncData(key, content)
+    if (noteId) {
+      await setSyncData(noteId, content)
+    }
     setIsEditing(false)
   }
 
@@ -31,10 +79,26 @@ export default function NoteWidget({ widgetId }) {
     }
   }, [isEditing])
 
+  const handleContextMenu = (e) => {
+    e.preventDefault()
+    onOpenSettings?.()
+  }
+
+  if (!noteId) {
+    return (
+      <div 
+        className="widget-inner note-widget note-unconfigured"
+        onContextMenu={handleContextMenu}
+      >
+        <div className="note-unconfigured-text">暂无便签，右键打开设置</div>
+      </div>
+    )
+  }
+
   return (
     <div 
       className="widget-inner note-widget"
-      onClick={() => !isEditing && setIsEditing(true)}
+      onContextMenu={handleContextMenu}
     >
       {isEditing ? (
         <textarea
@@ -46,7 +110,7 @@ export default function NoteWidget({ widgetId }) {
           placeholder="在这里写点什么..."
         />
       ) : (
-        <div className="note-content">
+        <div className="note-content" onClick={() => setIsEditing(true)}>
           {content || <span className="note-placeholder">点击编辑...</span>}
         </div>
       )}

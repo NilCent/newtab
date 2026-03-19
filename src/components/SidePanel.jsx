@@ -2,11 +2,13 @@ import React from 'react'
 import HistoryView from '../views/HistoryView'
 import HistorySettingsView from '../views/HistorySettingsView'
 import FlashcardSettingsView from '../views/FlashcardSettingsView'
+import NoteSettingsView from '../views/NoteSettingsView'
 
 const VIEW_COMPONENTS = {
   'history': HistoryView,
   'history-settings': HistorySettingsView,
   'flashcard-settings': FlashcardSettingsView,
+  'note-settings': NoteSettingsView,
 }
 
 export default function SidePanel({ open, view, onClose, mode = 'right', onBackToHistory, ...props }) {

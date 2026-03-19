@@ -13,6 +13,7 @@ const getLocalDateStr = (date) => {
 
 export default function TodoWidget({ onPenaltyChange }) {
   const [todos, setTodos] = useState([])
+  const [loaded, setLoaded] = useState(false)
   const [editCard, setEditCard] = useState({ open: false, todo: null, section: null })
 
   useEffect(() => {
@@ -20,21 +21,21 @@ export default function TodoWidget({ onPenaltyChange }) {
       if (saved) {
         setTodos(saved)
       }
+      setLoaded(true)
     })
     
     const unsubscribe = onSyncChange(STORAGE_KEY, (newData) => {
-      if (newData) {
-        setTodos(newData)
-      }
+      setTodos(newData || [])
     })
     
     return unsubscribe
   }, [])
 
   const saveTodos = useCallback(async (newTodos) => {
+    if (!loaded) return
     setTodos(newTodos)
     await setSyncData(STORAGE_KEY, newTodos)
-  }, [])
+  }, [loaded])
 
   const isToday = (dateStr) => {
     if (!dateStr) return false
@@ -193,6 +194,11 @@ export default function TodoWidget({ onPenaltyChange }) {
         return { ...todo, completed: true, completedAt: Date.now() }
       }
       return todo
+    }).filter(todo => {
+      if (todo.completed && todo.repeat === 'none') {
+        return false
+      }
+      return true
     })
     saveTodos(newTodos)
   }
@@ -311,13 +317,17 @@ export default function TodoWidget({ onPenaltyChange }) {
       <div className="todo-header">
         <span className="todo-title">待办事项</span>
       </div>
-      <div className="todo-list" onWheel={handleWheel}>
+      {!loaded ? (
+        <div className="todo-loading">加载中...</div>
+      ) : (
+        <div className="todo-list" onWheel={handleWheel}>
         {overdue.length > 0 && renderSection('逾期', overdue, 'overdue', true)}
         {renderSection('今天', today, 'today')}
         {renderSection('七日内', sevenDays, 'sevenDays')}
         {renderSection('计划', planned, 'planned')}
-      </div>
-      {editCard.open && (
+        </div>
+      )}
+      {editCard.open && loaded && (
         <TodoEditCard
           todo={editCard.todo}
           section={editCard.section}

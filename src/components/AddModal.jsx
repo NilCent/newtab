@@ -26,6 +26,11 @@ export default function AddModal({ open, onClose, onSelect }) {
     width: '100%', height: 320, border: '3px dashed rgba(31,41,55,.25)', borderRadius: 16,
     background: 'transparent', display: 'grid', gridTemplateRows: '1fr auto', alignItems: 'stretch', cursor: 'pointer'
   }
+  const noteItemWrap = {
+    ...itemWrap,
+    background: 'rgba(59, 130, 246, 0.08)',
+    borderColor: 'rgba(59, 130, 246, 0.4)'
+  }
   const previewBox = { padding: 16, display: 'grid', alignItems: 'center', justifyItems: 'center' }
   const labelBox = { padding: 12, borderTop: '1px dashed rgba(31,41,55,.12)', textAlign: 'center' }
   const title = { fontWeight: 700, fontSize: 14 }
@@ -262,11 +267,11 @@ export default function AddModal({ open, onClose, onSelect }) {
             <div style={previewBox}><FlashcardPreview w={3} h={2} /></div>
             <div style={labelBox}><div style={title}>闪卡 • 3×2</div><div style={desc}>最宽的显示区域</div></div>
           </div>
-          <div style={itemWrap} onClick={() => onSelect?.('note', 2, 2)}>
+          <div style={noteItemWrap} onClick={() => onSelect?.('note', 2, 2)}>
             <div style={previewBox}><NotePreview w={2} h={2} /></div>
             <div style={labelBox}><div style={title}>便签 • 2×2</div><div style={desc}>快速记录文本，自动同步</div></div>
           </div>
-          <div style={itemWrap} onClick={() => onSelect?.('note', 3, 2)}>
+          <div style={noteItemWrap} onClick={() => onSelect?.('note', 3, 2)}>
             <div style={previewBox}><NotePreview w={3} h={2} /></div>
             <div style={labelBox}><div style={title}>便签 • 3×2</div><div style={desc}>更大的记录空间</div></div>
           </div>

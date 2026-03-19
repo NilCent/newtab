@@ -29,6 +29,7 @@ export default function App() {
   const [addOpen, setAddOpen] = useState(false)
   const [penaltyActive, setPenaltyActive] = useState(false)
   const [currentFlashcardId, setCurrentFlashcardId] = useState(null)
+  const [currentNoteId, setCurrentNoteId] = useState(null)
   const [layout, setLayout] = useState(() => {
     try {
       const raw = localStorage.getItem('rglLayout')
@@ -84,7 +85,7 @@ export default function App() {
     if (kind === 'hackernews') return <HackerNewsWidget />
     if (kind === 'todo') return <TodoWidget onPenaltyChange={setPenaltyActive} />
     if (kind === 'flashcard') return <FlashcardWidget size={`${w}x${h}`} widgetId={widgetId} onOpenSettings={() => { setPanelView('flashcard-settings'); setPanelMode('right'); setPanelOpen(true); setCurrentFlashcardId(widgetId) }} />
-    if (kind === 'note') return <NoteWidget widgetId={widgetId} />
+    if (kind === 'note') return <NoteWidget widgetId={widgetId} onOpenSettings={() => { setPanelView('note-settings'); setPanelMode('right'); setPanelOpen(true); setCurrentNoteId(widgetId) }} />
     if (kind === 'readinglist') return <ReadingListWidget size={`${w}x${h}`} />
     return <div className="widget-inner"></div>
   }
@@ -251,7 +252,7 @@ export default function App() {
         onClose={() => setPanelOpen(false)}
         onOpenSettings={() => { setPanelView('history-settings'); setPanelOpen(true) }}
         onBackToHistory={() => { setPanelView('history'); setPanelOpen(true) }}
-        widgetId={currentFlashcardId}
+        widgetId={currentFlashcardId || currentNoteId}
       />
       <AddModal
         open={addOpen}
@@ -272,6 +273,7 @@ export default function App() {
             const nid = `${kind}-${count + 1}-${Date.now()}`
             next = [...next, { i: nid, kind, x: addPos.x, y: addPos.y, w: size.w, h: size.h, static: !editMode }]
             try { localStorage.setItem('rglLayout', JSON.stringify(next)) } catch {}
+            
             return next
           })
           setAddOpen(false)
