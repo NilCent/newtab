@@ -13,7 +13,8 @@
   "permissions": [
     "history",
     "storage",
-    "favicon"
+    "favicon",
+    "readingList"
   ],
   "host_permissions": [],
   "optional_host_permissions": [

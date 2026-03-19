@@ -10,6 +10,7 @@ import HackerNewsWidget from './components/HackerNewsWidget.jsx'
 import TodoWidget from './components/TodoWidget.jsx'
 import FlashcardWidget from './components/FlashcardWidget.jsx'
 import NoteWidget from './components/NoteWidget.jsx'
+import ReadingListWidget from './components/ReadingListWidget.jsx'
 import SidePanel from './components/SidePanel.jsx'
 import AddModal from './components/AddModal.jsx'
 
@@ -84,6 +85,7 @@ export default function App() {
     if (kind === 'todo') return <TodoWidget onPenaltyChange={setPenaltyActive} />
     if (kind === 'flashcard') return <FlashcardWidget size={`${w}x${h}`} widgetId={widgetId} onOpenSettings={() => { setPanelView('flashcard-settings'); setPanelMode('right'); setPanelOpen(true); setCurrentFlashcardId(widgetId) }} />
     if (kind === 'note') return <NoteWidget widgetId={widgetId} />
+    if (kind === 'readinglist') return <ReadingListWidget size={`${w}x${h}`} />
     return <div className="widget-inner"></div>
   }
   useEffect(() => {
@@ -126,6 +128,10 @@ export default function App() {
           if (k === 'note') {
             const ok = (ww === 2 && hh === 2) || (ww === 3 && hh === 2)
             return ok ? { w: ww, h: hh } : { w: 2, h: 2 }
+          }
+          if (k === 'readinglist') {
+            const ok = (ww === 2 && hh === 1) || (ww === 2 && hh === 2)
+            return ok ? { w: ww, h: hh } : { w: 2, h: 1 }
           }
           return { w: ww, h: hh }
         }

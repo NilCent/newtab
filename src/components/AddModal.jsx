@@ -182,6 +182,36 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
+  const ReadingListPreview = ({ w = 2, h = 1 }) => (
+    <div style={{ width: 260, height: h === 1 ? 180 : 220, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>阅读清单</div>
+        <div style={{ fontSize: 14 }}>↻</div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {h === 1 ? (
+          <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '6px 8px', background: '#f8fafc', borderRadius: 6 }}>
+            深入理解 JavaScript 异步编程
+          </div>
+        ) : (
+          <>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '6px 8px', background: '#f8fafc', borderRadius: 6 }}>
+              深入理解 JavaScript 异步编程
+            </div>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '6px 8px', background: '#f8fafc', borderRadius: 6 }}>
+              Rust 语言入门教程
+            </div>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '6px 8px', background: '#f8fafc', borderRadius: 6 }}>
+              系统设计面试指南
+            </div>
+            <div style={{ fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '6px 8px', background: '#f8fafc', borderRadius: 6 }}>
+              CSS Grid 完全指南
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -239,6 +269,14 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('note', 3, 2)}>
             <div style={previewBox}><NotePreview w={3} h={2} /></div>
             <div style={labelBox}><div style={title}>便签 • 3×2</div><div style={desc}>更大的记录空间</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('readinglist', 2, 1)}>
+            <div style={previewBox}><ReadingListPreview w={2} h={1} /></div>
+            <div style={labelBox}><div style={title}>阅读清单 • 2×1</div><div style={desc}>随机展示 Chrome 阅读清单</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('readinglist', 2, 2)}>
+            <div style={previewBox}><ReadingListPreview w={2} h={2} /></div>
+            <div style={labelBox}><div style={title}>阅读清单 • 2×2</div><div style={desc}>展示更多阅读内容</div></div>
           </div>
         </div>
       </div>
