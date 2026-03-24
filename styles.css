@@ -22,7 +22,11 @@ body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, "PingFang SC", "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--text);
-  background: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1920&auto=format&fit=crop") center / cover no-repeat fixed;
+  background-color: #f0f4f8;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -455,6 +459,32 @@ body.edit-mode .widget .remove-btn {
   transition: background .2s ease, color .2s ease;
 }
 .edit-fab:hover { background: rgba(255,255,255,.8); color: var(--text); }
+
+.bg-nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(6px);
+  color: var(--subtle);
+  font-size: 20px;
+  line-height: 42px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 2002;
+  transition: background .2s ease, color .2s ease, opacity .2s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bg-nav-btn:hover { background: rgba(255,255,255,.8); color: var(--text); }
+.bg-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.bg-nav-btn.bg-prev { left: 16px; }
+.bg-nav-btn.bg-next { right: 16px; }
 
 /* 响应式：375px 手机端 3 列展示 */
 @media (max-width: 420px) {

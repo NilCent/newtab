@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import GridLayout, { WidthProvider } from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
@@ -20,6 +20,30 @@ const baseLayout = [
   { i: 'history-1', kind: 'history', x: 0, y: 2, w: 1, h: 1, static: true }
 ]
 
+const DEFAULT_BG_URL = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1920&auto=format&fit=crop'
+
+const UNSPLASH_COLLECTION = [
+  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1433086966358-54859d0ed716?q=80&w=1920&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1920&auto=format&fit=crop'
+]
+
+const isExtension = typeof chrome !== 'undefined' && chrome.runtime
+
+async function sendMessage(type, payload) {
+  if (!isExtension) return null
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type, payload }, resolve)
+  })
+}
+
 export default function App() {
   const [panelOpen, setPanelOpen] = useState(false)
   const [panelView, setPanelView] = useState('')
@@ -30,6 +54,9 @@ export default function App() {
   const [penaltyActive, setPenaltyActive] = useState(false)
   const [currentFlashcardId, setCurrentFlashcardId] = useState(null)
   const [currentNoteId, setCurrentNoteId] = useState(null)
+  const [bgImage, setBgImage] = useState(null)
+  const [bgImages, setBgImages] = useState([])
+  const [bgIndex, setBgIndex] = useState(0)
   const [layout, setLayout] = useState(() => {
     try {
       const raw = localStorage.getItem('rglLayout')
@@ -97,6 +124,98 @@ export default function App() {
   useEffect(() => {
     try { document.body.classList.toggle('edit-mode', !!editMode) } catch {}
   }, [editMode])
+  
+  const prevEditModeRef = useRef(editMode)
+  useEffect(() => {
+    if (prevEditModeRef.current && !editMode && bgImages.length > 0 && bgImages[bgIndex]) {
+      const currentBg = bgImages[bgIndex]
+      if (isExtension && currentBg.startsWith('data:')) {
+        sendMessage('cacheBackgroundImageWithUrl', { dataUrl: currentBg })
+      } else if (isExtension && currentBg.startsWith('http')) {
+        sendMessage('cacheBackgroundImage', { url: currentBg })
+      }
+      setBgImages([])
+      setBgIndex(0)
+    } else if (!prevEditModeRef.current && editMode) {
+      const currentBg = document.body.style.backgroundImage
+      const match = currentBg?.match(/url\(["']?([^"')]+)["']?\)/)
+      if (match && match[1]) {
+        setBgImages([match[1]])
+        setBgIndex(0)
+      }
+    }
+    prevEditModeRef.current = editMode
+  }, [editMode])
+  useEffect(() => {
+    const loadBackground = async () => {
+      if (!isExtension) {
+        document.body.style.backgroundImage = `url("${DEFAULT_BG_URL}")`
+        return
+      }
+      
+      const cached = await sendMessage('getCachedBackgroundImage')
+      if (cached?.ok && cached?.data) {
+        setBgImage(cached.data)
+        document.body.style.backgroundImage = `url("${cached.data}")`
+        return
+      }
+      
+      const cacheResult = await sendMessage('cacheBackgroundImage', { url: DEFAULT_BG_URL })
+      if (cacheResult?.ok) {
+        const newCached = await sendMessage('getCachedBackgroundImage')
+        if (newCached?.ok && newCached?.data) {
+          setBgImage(newCached.data)
+          document.body.style.backgroundImage = `url("${newCached.data}")`
+        }
+      } else {
+        document.body.style.backgroundImage = `url("${DEFAULT_BG_URL}")`
+      }
+    }
+    loadBackground()
+  }, [])
+  
+  const handleNextBg = async () => {
+    const nextIndex = bgIndex + 1
+    if (nextIndex < bgImages.length) {
+      setBgIndex(nextIndex)
+      document.body.style.backgroundImage = `url("${bgImages[nextIndex]}")`
+    } else {
+      const availableUrls = UNSPLASH_COLLECTION.filter(url => !bgImages.includes(url))
+      let randomUrl
+      if (availableUrls.length === 0) {
+        randomUrl = UNSPLASH_COLLECTION[Math.floor(Math.random() * UNSPLASH_COLLECTION.length)]
+      } else {
+        randomUrl = availableUrls[Math.floor(Math.random() * availableUrls.length)]
+      }
+      
+      if (isExtension) {
+        const cacheResult = await sendMessage('cacheBackgroundImage', { url: randomUrl })
+        if (cacheResult?.ok) {
+          const newCached = await sendMessage('getCachedBackgroundImageByUrl', { url: randomUrl })
+          if (newCached?.ok && newCached?.data) {
+            const newImages = [...bgImages, newCached.data]
+            setBgImages(newImages)
+            setBgIndex(newImages.length - 1)
+            document.body.style.backgroundImage = `url("${newCached.data}")`
+            return
+          }
+        }
+      }
+      
+      const newImages = [...bgImages, randomUrl]
+      setBgImages(newImages)
+      setBgIndex(newImages.length - 1)
+      document.body.style.backgroundImage = `url("${randomUrl}")`
+    }
+  }
+  
+  const handlePrevBg = () => {
+    if (bgIndex > 0) {
+      const prevIndex = bgIndex - 1
+      setBgIndex(prevIndex)
+      document.body.style.backgroundImage = `url("${bgImages[prevIndex]}")`
+    }
+  }
   useEffect(() => {
     const onMsg = (e) => {
       const msg = e?.data
@@ -245,6 +364,23 @@ export default function App() {
           } 
         }}
       >⚙</button>
+      {editMode && (
+        <>
+          <button
+            className="bg-nav-btn bg-prev"
+            onClick={handlePrevBg}
+            disabled={bgIndex === 0}
+            aria-label="上一张背景"
+            title="上一张背景"
+          >‹</button>
+          <button
+            className="bg-nav-btn bg-next"
+            onClick={handleNextBg}
+            aria-label="下一张背景"
+            title="下一张背景"
+          >›</button>
+        </>
+      )}
       <SidePanel
         open={panelOpen}
         view={panelView}
