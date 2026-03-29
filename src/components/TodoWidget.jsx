@@ -15,6 +15,7 @@ export default function TodoWidget({ onPenaltyChange }) {
   const [todos, setTodos] = useState([])
   const [loaded, setLoaded] = useState(false)
   const [editCard, setEditCard] = useState({ open: false, todo: null, section: null })
+  const [, setTick] = useState(0)
 
   useEffect(() => {
     getSyncData(STORAGE_KEY).then(saved => {
@@ -29,6 +30,14 @@ export default function TodoWidget({ onPenaltyChange }) {
     })
     
     return unsubscribe
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick(t => t + 1)
+    }, 60000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   const saveTodos = useCallback(async (newTodos) => {
