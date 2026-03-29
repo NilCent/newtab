@@ -1402,6 +1402,10 @@ body.edit-mode .widget .remove-btn {
   cursor: default;
 }
 
+.flashcard-container.no-transition .flashcard-inner {
+  transition: none;
+}
+
 .flashcard-inner {
   position: relative;
   width: 100%;

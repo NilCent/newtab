@@ -15,6 +15,7 @@ export default function FlashcardWidget({ size = '1x1', widgetId, onOpenSettings
   const [shuffledCards, setShuffledCards] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
+  const [noTransition, setNoTransition] = useState(false)
   const [loading, setLoading] = useState(true)
   const [configStatus, setConfigStatus] = useState('no-config')
 
@@ -112,15 +113,31 @@ export default function FlashcardWidget({ size = '1x1', widgetId, onOpenSettings
 
   const goToNext = useCallback(() => {
     if (shuffledCards.length <= 1) return
+    if (isFlipped) {
+      setNoTransition(true)
+      setIsFlipped(false)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setNoTransition(false)
+        })
+      })
+    }
     setCurrentIndex(prev => (prev + 1) % shuffledCards.length)
-    setIsFlipped(false)
-  }, [shuffledCards.length])
+  }, [shuffledCards.length, isFlipped])
 
   const goToPrev = useCallback(() => {
     if (shuffledCards.length <= 1) return
+    if (isFlipped) {
+      setNoTransition(true)
+      setIsFlipped(false)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setNoTransition(false)
+        })
+      })
+    }
     setCurrentIndex(prev => (prev - 1 + shuffledCards.length) % shuffledCards.length)
-    setIsFlipped(false)
-  }, [shuffledCards.length])
+  }, [shuffledCards.length, isFlipped])
 
   const handleFlip = useCallback(() => {
     if (currentCard?.type === 'double') {
@@ -245,7 +262,7 @@ export default function FlashcardWidget({ size = '1x1', widgetId, onOpenSettings
       )}
 
       <div 
-        className={`flashcard-container ${isFlipped ? 'flipped' : ''} ${currentCard.type === 'single' ? 'no-flip' : ''}`} 
+        className={`flashcard-container ${isFlipped ? 'flipped' : ''} ${currentCard.type === 'single' ? 'no-flip' : ''} ${noTransition ? 'no-transition' : ''}`} 
         onClick={handleFlip}
       >
         <div className="flashcard-inner">
