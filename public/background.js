@@ -1,13 +1,28 @@
 const oneDay = 86400000
 const CACHE_NAME = 'newtab-bg-cache-v1'
-const BG_CACHE_KEY = 'background-image'
+const BG_URL_KEY = 'background-image-url'
+
+const getStoredUrl = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get([BG_URL_KEY], (result) => {
+      resolve(result[BG_URL_KEY] || null)
+    })
+  })
+}
+
+const setStoredUrl = (url) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ [BG_URL_KEY]: url }, resolve)
+  })
+}
 
 async function cacheBackgroundImage(url) {
   try {
     const cache = await caches.open(CACHE_NAME)
     const response = await fetch(url)
     if (response.ok) {
-      await cache.put(BG_CACHE_KEY, response)
+      await cache.put(url, response)
+      await setStoredUrl(url)
       return { ok: true }
     }
     return { ok: false, error: 'Fetch failed' }
@@ -19,8 +34,12 @@ async function cacheBackgroundImage(url) {
 
 async function getCachedBackgroundImage() {
   try {
+    const url = await getStoredUrl()
+    if (!url) {
+      return { ok: false, error: 'No cached URL' }
+    }
     const cache = await caches.open(CACHE_NAME)
-    const response = await cache.match(BG_CACHE_KEY)
+    const response = await cache.match(url)
     if (response) {
       const blob = await response.blob()
       const base64 = await blobToBase64(blob)
@@ -72,7 +91,8 @@ async function cacheBackgroundImageWithUrl(payload) {
     const cache = await caches.open(CACHE_NAME)
     const response = await fetch(dataUrl)
     if (response.ok) {
-      await cache.put(BG_CACHE_KEY, response)
+      await cache.put(dataUrl, response)
+      await setStoredUrl(dataUrl)
       return { ok: true }
     }
     return { ok: false, error: 'Failed to cache data URL' }
@@ -197,6 +217,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         result = await cacheBackgroundImageWithUrl(payload)
       } else if (type === 'getCachedBackgroundImageByUrl') {
         result = await getCachedBackgroundImageByUrl(payload)
+      } else if (type === 'showNotification') {
+        chrome.notifications.create('timer-complete-' + Date.now(), {
+          type: 'basic',
+          iconUrl: '/icon-128.png',
+          title: payload.title || '定时器',
+          message: payload.message || '时间到！',
+          priority: 2
+        })
+        result = { ok: true }
       } else {
         result = null
       }

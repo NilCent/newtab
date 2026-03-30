@@ -217,6 +217,17 @@ export default function AddModal({ open, onClose, onSelect }) {
       </div>
     </div>
   )
+  const TimerPreview = () => (
+    <div style={{ width: 180, height: 180, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontSize: 28, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>25:00</div>
+      </div>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, borderTop: '1px solid #e5e7eb' }}>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14 }}>▶</div>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>■</div>
+      </div>
+    </div>
+  )
   return (
     <>
       <div style={overlayStyle} onClick={onClose} />
@@ -282,6 +293,10 @@ export default function AddModal({ open, onClose, onSelect }) {
           <div style={itemWrap} onClick={() => onSelect?.('readinglist', 2, 2)}>
             <div style={previewBox}><ReadingListPreview w={2} h={2} /></div>
             <div style={labelBox}><div style={title}>阅读清单 • 2×2</div><div style={desc}>展示更多阅读内容</div></div>
+          </div>
+          <div style={itemWrap} onClick={() => onSelect?.('timer', 1, 1)}>
+            <div style={previewBox}><TimerPreview /></div>
+            <div style={labelBox}><div style={title}>定时器 • 1×1</div><div style={desc}>倒计时提醒，支持暂停和停止</div></div>
           </div>
         </div>
       </div>

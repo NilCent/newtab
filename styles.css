@@ -1937,3 +1937,175 @@ body.edit-mode .widget .remove-btn {
 .reading-list-widget .rl-domain {
   margin-right: 8px;
 }
+
+.timer-widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+}
+
+.timer-time-area {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  min-height: 0;
+}
+
+.timer-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.timer-time {
+  font-size: 32px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+.timer-time-editable {
+  font-size: 32px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  outline: none;
+  cursor: text;
+  border-radius: 4px;
+  padding: 0 2px;
+  min-width: 20px;
+  display: inline-block;
+  text-align: center;
+}
+
+.timer-time-editable:focus {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.timer-time-sep {
+  font-size: 32px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  margin: 0 1px;
+}
+
+.timer-progress {
+  width: 90%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.timer-progress-bar {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.timer-edit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.timer-edit-input {
+  width: 36px;
+  height: 32px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0 4px;
+  -moz-appearance: textfield;
+}
+
+.timer-edit-input::-webkit-outer-spin-button,
+.timer-edit-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.timer-edit-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.timer-edit-sep {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.timer-buttons {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  padding: 8px;
+}
+
+.timer-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.timer-btn:hover {
+  transform: scale(1.1);
+}
+
+.timer-btn:active {
+  transform: scale(0.95);
+}
+
+.timer-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.timer-btn-start {
+  background: var(--primary);
+  color: #fff;
+}
+
+.timer-btn-start:hover {
+  background: var(--primary-strong);
+}
+
+.timer-btn-pause {
+  background: var(--warning);
+  color: #fff;
+}
+
+.timer-btn-pause:hover {
+  background: #e69500;
+}
+
+.timer-btn-stop {
+  background: var(--border);
+  color: var(--text);
+}
+
+.timer-btn-stop:hover {
+  background: #d1d5db;
+}

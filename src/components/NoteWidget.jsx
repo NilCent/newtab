@@ -29,6 +29,7 @@ export default function NoteWidget({ widgetId, onOpenSettings }) {
   const [clickPosition, setClickPosition] = useState(null)
   const textareaRef = useRef(null)
   const contentRef = useRef(null)
+  const cursorSetRef = useRef(false)
 
   const loadNote = useCallback(async () => {
     const widgetNoteMap = getLocalData(WIDGET_NOTE_MAP_KEY) || {}
@@ -76,7 +77,7 @@ export default function NoteWidget({ widgetId, onOpenSettings }) {
   }
 
   useEffect(() => {
-    if (isEditing && textareaRef.current) {
+    if (isEditing && textareaRef.current && !cursorSetRef.current) {
       textareaRef.current.focus()
       
       if (clickPosition !== null) {
@@ -86,51 +87,49 @@ export default function NoteWidget({ widgetId, onOpenSettings }) {
         textareaRef.current.setSelectionRange(content.length, content.length)
       }
       setClickPosition(null)
+      cursorSetRef.current = true
     }
   }, [isEditing, clickPosition, content.length])
 
   const handleContentClick = (e) => {
+    cursorSetRef.current = false
     if (!contentRef.current) {
       setIsEditing(true)
       return
     }
     
-    const rect = contentRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    let position = content.length
     
-    const lineHeight = parseInt(getComputedStyle(contentRef.current).lineHeight) || 20
-    const fontSize = parseInt(getComputedStyle(contentRef.current).fontSize) || 14
-    const charWidth = fontSize * 0.6
-    
-    const lines = content.split('\n')
-    let currentY = 0
-    let charIndex = 0
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i]
-      const lineCount = Math.ceil((line.length * charWidth) / rect.width) || 1
-      const lineStartY = currentY
-      const lineEndY = currentY + lineCount * lineHeight
+    if (content.length > 0 && document.caretRangeFromPoint) {
+      const range = document.caretRangeFromPoint(e.clientX, e.clientY)
       
-      if (y >= lineStartY && y < lineEndY) {
-        const relativeY = y - lineStartY
-        const rowInLine = Math.floor(relativeY / lineHeight)
-        const charsPerRow = Math.floor(rect.width / charWidth)
-        const charInRow = Math.floor(x / charWidth)
-        const estimatedPos = charIndex + rowInLine * charsPerRow + charInRow
-        setClickPosition(Math.min(estimatedPos, charIndex + line.length))
-        break
+      if (range) {
+        const startContainer = range.startContainer
+        const startOffset = range.startOffset
+        
+        if (contentRef.current.contains(startContainer)) {
+          const treeWalker = document.createTreeWalker(
+            contentRef.current,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+          )
+          
+          let charCount = 0
+          
+          while (treeWalker.nextNode()) {
+            const node = treeWalker.currentNode
+            if (node === startContainer) {
+              position = charCount + startOffset
+              break
+            }
+            charCount += node.textContent.length
+          }
+        }
       }
-      
-      charIndex += line.length + 1
-      currentY = lineEndY
     }
     
-    if (y >= currentY) {
-      setClickPosition(content.length)
-    }
-    
+    setClickPosition(position)
     setIsEditing(true)
   }
 

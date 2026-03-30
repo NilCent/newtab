@@ -1,5 +1,20 @@
 const isExtension = typeof chrome !== 'undefined' && chrome.storage
 
+export async function sendMessage(type, payload) {
+  if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.sendMessage) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type, payload }, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError)
+        } else {
+          resolve(response)
+        }
+      })
+    })
+  }
+  return null
+}
+
 export async function getSyncData(key) {
   if (isExtension) {
     return new Promise((resolve) => {
