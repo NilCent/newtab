@@ -87,7 +87,10 @@ export default function TimerWidget() {
     if (status === 'running' && remainingSeconds <= 0) {
       clearTimer()
       setStatus('idle')
+      setTotalSeconds(0)
       setRemainingSeconds(0)
+      if (minutesRef.current) minutesRef.current.textContent = minutesValueRef.current
+      if (secondsRef.current) secondsRef.current.textContent = secondsValueRef.current
       showNotification()
     }
   }, [remainingSeconds, status, clearTimer, showNotification])
@@ -119,6 +122,9 @@ export default function TimerWidget() {
       if (newRemaining <= 0) {
         clearTimer()
         setStatus('idle')
+        setTotalSeconds(0)
+        if (minutesRef.current) minutesRef.current.textContent = minutesValueRef.current
+        if (secondsRef.current) secondsRef.current.textContent = secondsValueRef.current
         showNotification()
       }
     }, 200)

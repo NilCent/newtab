@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
 import { parseFlashcards } from '../utils/flashcardParser'
 import { 
   loadWidgetConfig, 
@@ -268,7 +269,7 @@ export default function FlashcardWidget({ size = '1x1', widgetId, onOpenSettings
         <div className="flashcard-inner">
           <div className="flashcard-front">
             <div className="flashcard-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                 {currentCard.type === 'double' ? currentCard.front : currentCard.content}
               </ReactMarkdown>
             </div>
@@ -276,7 +277,7 @@ export default function FlashcardWidget({ size = '1x1', widgetId, onOpenSettings
           {currentCard.type === 'double' && (
             <div className="flashcard-back">
               <div className="flashcard-content">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                   {currentCard.back}
                 </ReactMarkdown>
               </div>
